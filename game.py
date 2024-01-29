@@ -53,8 +53,7 @@ class Game:
         self.bullets = pygame.sprite.Group()
 
         # The font used in the game
-        self.font = pygame.font.SysFont(constants.FONT_NAME, constants.FONT_SIZE)
-        self.score_font = self.font.render("", True, constants.WHITE)       
+        self.font = pygame.font.SysFont(constants.FONT_NAME, constants.FONT_SIZE)  
 
         # The starting game button
         self.start_button = Text(
@@ -92,8 +91,8 @@ class Game:
 
         # Game status
         self.run_starting = True
-        self.run_ending = False
         self.run_game = False
+        self.run_ending = False
 
         # Start the game
         self.run()
