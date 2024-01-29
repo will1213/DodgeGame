@@ -1,37 +1,52 @@
-import pygame
-import constants
 import math
+import constants
 from gameObject import GameObject
 
 
 class Bullet(GameObject):
+    """
+    A class to represent the bullet instance.
+    """
 
-    def create_bullet(self):
-        mouse_x, mouse_y = pygame.mouse.get_pos()
-        dx = mouse_x - self.position.x
-        dy = mouse_y - self.position.y
+    def __init__(self, image, x, y, width, height, dt, destination_x, destination_y) -> None:
+        """
+        Init function
+
+        Args:
+            image (pygame.Surface): The image for the bullet.
+            x (float): Bullet's current x coordinate position.
+            y (float): Bullet's current y coordinate position.
+            width (float): Bullet's width.
+            height (float): Bullet's height.
+            dt (float): The time step for movement calculation.
+            destination_x: The x coordinate of the bullet's destination.
+            destination_y: The y coordinate of the bullet's destination.
+
+        """
+        super().__init__(image, x, y, width, height, dt)
+        self.destination_x = destination_x
+        self.destination_y = destination_y
+        return
+
+    def move(self) -> None:
+        """Move the bullet towards its destination."""
+        dx = self.destination_x - self.x
+        dy = self.destination_y - self.y
         distance = math.sqrt(dx*dx + dy*dy)
-        bullet_x_speed = dx / distance
-        bullet_y_speed = dy / distance
-        return [self.position.x, self.position.y, bullet_x_speed, bullet_y_speed]
-        self.bullets.append([self.position.x, self.position.y, bullet_x_speed, bullet_y_speed])
+        # Normalized for calculating how much needs to move on x/y coordinate
+        dx = dx / distance
+        dy = dy / distance
+        self.set_positions(self.x + dx * constants.BULLET_SPEED * self.dt, 
+                           self.y + dy * constants.BULLET_SPEED * self.dt)
         return
-    
-    def display(self):
-        pygame.draw.circle(self.screen, "black", self.position, constants.BULLET_SIZE)
-        return
-    
-    def move(self, destination_x, destination_y) -> bool:
-        dx = destination_x - self.position.x
-        dy = destination_y - self.position.y
+
+    def is_destination(self) -> bool:
+        """
+        Checks if the bullet has reached its destination.
+        """
+        dx = self.destination_x - self.x
+        dy = self.destination_y - self.y
         distance = math.sqrt(dx*dx + dy*dy)
         if distance <= constants.BULLET_SIZE:
             return True
-        dx = dx / distance
-        dy = dy / distance
-        self.position.x += dx * constants.BULLET_SPEED * self.dt
-        self.position.y += dy * constants.BULLET_SPEED * self.dt
         return False
-
-    # def is_finished(self):
-    #     if 
