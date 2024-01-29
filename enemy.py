@@ -1,5 +1,5 @@
 import math
-from gameObject import GameObject
+from game_object import GameObject
 
 
 class Enemy(GameObject):

@@ -1,26 +1,22 @@
 import constants
-from gameObject import GameObject
+from game_object import GameObject
 
 
 class Text(GameObject):
     """
     A class to display texts.
     """
-    def __init__(self, image, x, y, width, height, dt, font) -> None:
+    def __init__(self, x, y, font) -> None:
         """
         Init function
 
         Args:
-            image (pygame.Surface): The text box.
             x (float): X coordinate position.
             y (float): Y coordinate position.
-            width (float): Text box width.
-            height (float): Text box height.
-            dt (float): The time step for movement calculation.
             font (pygame.font.Font): The font object used to create the text.
 
         """
-        super().__init__(image, x, y, width, height, dt)
+        super().__init__(x=x, y=y)
         self.font = font
         return
 

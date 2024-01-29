@@ -5,7 +5,7 @@ class GameObject(pygame.sprite.Sprite):
     """
     A base class inherit from pygame sprite.
     """
-    def __init__(self, image, x, y, width, height, dt) -> None:
+    def __init__(self, image=None, x=0, y=0, width=0, height=0, dt=0) -> None:
         """
         Init function
 
@@ -21,8 +21,9 @@ class GameObject(pygame.sprite.Sprite):
         self.dt = dt
         self.x = x
         self.y = y
-        self.set_image(image, width, height)
-        self.set_positions(x, y)
+        if image:
+            self.set_image(image, width, height)
+            self.set_positions(x, y)
         return
 
     def set_image(self, image, width=None, height=None):

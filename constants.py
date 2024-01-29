@@ -7,6 +7,8 @@ SECOND_IN_MILLISECOND = 1000
 # Screen size
 SCREEN_WDITH = 1280
 SCREEN_HEIGHT = 720
+SCREEN_CENTER_X = 640
+SCREEN_CENTER_Y = 360
 
 # Game object settings
 PLAYER_WIDTH = 40
@@ -32,3 +34,6 @@ WHITE = (255, 255, 255)
 YELLOW = (227, 172, 32)
 GREEN = (74, 227, 32)
 RED = (255, 25, 0)
+
+# Path
+BACKGROUND_MUSIC_PATH = ".\\public\\background_music.mp3"

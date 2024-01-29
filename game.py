@@ -22,6 +22,12 @@ class Game:
         pygame.display.set_caption(constants.GAME_NAME)
         self.screen = pygame.display.set_mode((constants.SCREEN_WDITH, constants.SCREEN_HEIGHT))
 
+        # TODO: Allow user to adjust music
+        # Set up the background music
+        pygame.mixer.music.load(constants.BACKGROUND_MUSIC_PATH)
+        pygame.mixer.music.play()
+        pygame.mixer.music.set_volume(0.5)
+
         # Set up clock
         self.clock = pygame.time.Clock()
         self.dt = self.clock.tick(constants.FPS) / constants.SECOND_IN_MILLISECOND
@@ -36,8 +42,8 @@ class Game:
         player_image.fill(constants.YELLOW)
         self.player = Player(
             image=player_image,
-            x=self.screen.get_width() / 2,
-            y=self.screen.get_height() / 2,
+            x=constants.SCREEN_CENTER_X,
+            y=constants.SCREEN_CENTER_Y,
             width=constants.PLAYER_WIDTH,
             height=constants.PLAYER_HEIGHT,
             dt=self.dt,)
@@ -50,27 +56,35 @@ class Game:
         self.font = pygame.font.SysFont(constants.FONT_NAME, constants.FONT_SIZE)
         self.score_font = self.font.render("", True, constants.WHITE)       
 
+        # The starting game button
+        self.start_button = Text(
+            x=constants.SCREEN_CENTER_X,
+            y=constants.SCREEN_CENTER_Y,
+            font=self.font,
+            )
+        self.start_button.update_text('Start')
+
         # The surival score label
         self.survival_score = Text(
-            image=self.score_font,
-            x=self.screen.get_width() / 2,
+            x=constants.SCREEN_CENTER_X,
             y=constants.FONT_SIZE,
-            width=0,
-            height=0,
-            dt=self.dt,
             font=self.font,
             )
 
         # The elimination score label
         self.elimination_score = Text(
-            image=self.score_font,
-            x=self.screen.get_width() / 2,
+            x=constants.SCREEN_CENTER_X,
             y=self.screen.get_height() - constants.FONT_SIZE,
-            width=0,
-            height=0,
-            dt=self.dt,
             font=self.font,
             )
+
+        # The ending button
+        self.game_over_button = Text(
+            x=constants.SCREEN_CENTER_X,
+            y=constants.SCREEN_CENTER_Y,
+            font=self.font,
+            )
+        self.game_over_button.update_text('Game Over')
 
         # Game level
         self.elimination_count = 0
@@ -109,7 +123,7 @@ class Game:
                     # When user click "x"
                     self.run_game = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    # When user click on mouse aka shooting
+                    # Get cursor position when user shoots
                     mouse_x, mouse_y = pygame.mouse.get_pos()
 
                     # TODO: Use other image to show the bullet
@@ -135,8 +149,8 @@ class Game:
 
             # Create enemies based on a time interval
             current_time = pygame.time.get_ticks()
-            time_lapsed = current_time - self.last_enemies_spawn_time
-            if time_lapsed > constants.TIME_PER_LEVEL_IN_MILLISECOND:
+            time_since_last_enemy_spawn = current_time - self.last_enemies_spawn_time
+            if time_since_last_enemy_spawn > constants.TIME_PER_LEVEL_IN_MILLISECOND:
                 self.level += 1
                 self.last_enemies_spawn_time = current_time
                 self.create_enemies(self.level)
@@ -185,18 +199,6 @@ class Game:
         """
         The starting menu theme, start the gameplay when user click play.
         """
-        # The start button
-        start_button = Text(
-            image=self.score_font,
-            x=self.screen.get_width() / 2,
-            y=self.screen.get_height() / 2,
-            width=0,
-            height=0,
-            dt=self.dt,
-            font=self.font,
-            )
-        start_button.update_text('Start')
-
         # Basic loop and wait for user's input
         while self.run_starting:
             for event in pygame.event.get():
@@ -204,11 +206,11 @@ class Game:
                     self.run_starting = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     # Check if user click the start button, start the game if it's clicked.
-                    if start_button.rect.collidepoint(event.pos):
+                    if self.start_button.rect.collidepoint(event.pos):
                         self.run_starting = False
                         self.run_game = True
             self.screen.fill(constants.GREY)
-            start_button.draw(self.screen)
+            self.start_button.draw(self.screen)
             pygame.display.flip()
             self.set_clock_tick(constants.FPS)
         return
@@ -217,16 +219,6 @@ class Game:
         """
         The game over theme, also shows user's scores.
         """
-        game_over_button = Text(
-            image=self.score_font,
-            x=self.screen.get_width() / 2,
-            y=self.screen.get_height() / 2,
-            width=0,
-            height=0,
-            dt=self.dt,
-            font=self.font,
-            )
-        game_over_button.update_text('Game Over')
         # Basic loop and wait for user's input
         while self.run_ending:
             for event in pygame.event.get():
@@ -234,10 +226,10 @@ class Game:
                     self.run_ending = False
                 # Check if user hits game over, end the game if it's clicked.
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if game_over_button.rect.collidepoint(event.pos):
+                    if self.game_over_button.rect.collidepoint(event.pos):
                         self.run_ending = False
             self.screen.fill(constants.GREY)
-            game_over_button.draw(self.screen)
+            self.game_over_button.draw(self.screen)
 
             # Keep the scores on the screen
             self.elimination_score.draw(self.screen)
