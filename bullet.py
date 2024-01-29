@@ -29,7 +29,9 @@ class Bullet(GameObject):
         return
 
     def move(self) -> None:
-        """Move the bullet towards its destination."""
+        """
+        Move the bullet towards its destination.
+        """
         dx = self.destination_x - self.x
         dy = self.destination_y - self.y
         distance = math.sqrt(dx*dx + dy*dy)

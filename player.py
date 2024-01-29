@@ -1,13 +1,12 @@
-
 import pygame
-import math
 import constants
-
 from gameObject import GameObject
 
 
 class Player(GameObject):
-
+    """
+    A class representing the player.
+    """
 
     def move(self):
         """
